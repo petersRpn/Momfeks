@@ -1,0 +1,7 @@
+.min-30 {
+    min-width: 30rem;
+  }
+  img.small {
+    max-width: 5rem;
+    width: 100%;
+  }
