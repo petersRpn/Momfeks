@@ -5,12 +5,12 @@ import Rating from './Rating'
 function Product({product}) {
   return (
     <div>
-        <div key={product.id} className='card'>
-              <Link to={`/product/${product.id}`}>
+        <div key={product._id} className='card'>
+              <Link to={`/product/${product._id}`}>
                 <img className="medium" src={product.image} alt={product.description} />
               </Link>
               <div className=' card-body'>
-                <Link className='description' to={`/product/${product.id}`}>
+                <Link className='description' to={`/product/${product._id}`}>
                   <h2>{product.description}</h2>
                 </Link>
                 <div className='rating'>

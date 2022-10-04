@@ -27,7 +27,7 @@ dispatch(removeFromCart(productId))
 };
 
 const checkoutHandler = () => {
-navigate('/signin?redirect=shipping');
+navigate('/signin?redirect=/shipping');
 };
 return (
 <div className="row top">
@@ -50,23 +50,23 @@ return (
                 ></img>
                 </div>
                 <div className="min-30">
-                <Link to={`/product/${item.product}`}>{item.name}</Link>
+                    <Link to={`/product/${item.product}`}>{item.name}</Link>
                 </div>
                 <div>
-                <select
+                    <select
                     value={item.qty}
                     onChange={(e) =>
                     dispatch(
                         addToCart(item.product, Number(e.target.value))
                     )
                     }
-                >
+                    >
                     {[...Array(item.countInStock).keys()].map((x) => (
-                    <option key={x + 1} value={x + 1}>
-                        {x + 1}
+                    <option key={x+1} value={x+1}>
+                        {x+1}
                     </option>
                     ))}
-                </select>
+                    </select>
                 </div>
                 <div>${item.price}</div>
                 <div>

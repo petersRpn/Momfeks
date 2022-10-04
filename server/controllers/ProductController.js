@@ -6,30 +6,32 @@ export const getdbProduct = expressAsyncHandler(async(req, res) => {
     try {
     //  await Product.remove({})
     const createdProduct = await Product.insertMany(data.products);
-    res.send({createdProduct})
+    res.send({createdProduct});
 
     } catch (error) {
-        res.status(400).send({message: error.message})
+        res.status(400).send({message: error.message});
     }
     
 }
 )
 
-export const getProduct = (req, res) => {
+export const getProduct = expressAsyncHandler(async(req, res) => {
+    const products = await Product.find({})
     try {
-        res.send(data.products);
+        res.send(products);
     } catch (error) {
         res.status(404).send({ message: 'failed' });
     }
     
-}
+});
 
-export const getProductId = (req, res) => {
-    const productId = req.params.id
-    const product = data.products.find(x => x.id === productId)
+export const getProductId = expressAsyncHandler(async(req, res) => {  
+
     try {
-        res.send(product)
+        const productId = req.params.id;
+        const product = await Product.findById(productId);
+        res.send(product);
     } catch (error) {
         res.status(404).send({ message: 'Product Not Found' });
     }
-}
+});

@@ -14,12 +14,11 @@ const dispatch = useDispatch();
 const productDetail = useSelector(state => state.productDetail)
 const {product, error, loading} = productDetail
 const {id} = useParams()
-const navigate = useNavigate()
+const navigate = useNavigate();
 const productId = id
   useEffect(() => {
     dispatch(productDetails(productId))
   },[dispatch, productId]);
-
   const addToCartHandler = () => {
     navigate(`/cart/${productId}?qty=${qty}`)
   }
