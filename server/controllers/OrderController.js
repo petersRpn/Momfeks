@@ -1,5 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import Order from "../model/orderModel.js";
+import { mailgun, payOrderEmailTemplate } from "../utils.js";
 
 export const postOrder = expressAsyncHandler(async (req, res) => {
 if (req.body.orderItems.length === 0) {
@@ -49,6 +50,28 @@ export const putOrder = () => expressAsyncHandler(async (req, res) => {
         email_address: req.body.email_address,
       };
       const updatedOrder = await order.save();
+      try {
+        mailgun()
+          .messages()
+          .send(
+            {
+              from: 'Amazona <amazona@mg.yourdomain.com>',
+              to: `${order.user.name} <${order.user.email}>`,
+              subject: `New order ${order._id}`,
+              html: payOrderEmailTemplate(order),
+            },
+            (error, body) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log(body);
+              }
+            }
+          );
+      } catch (err) {
+        console.log(err);
+      }
+
       res.send({ message: 'Order Paid', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Order Not Found' });
@@ -59,3 +82,27 @@ export const putOrder = () => expressAsyncHandler(async (req, res) => {
       const orders = await Order.find({ user: req.user._id });
       res.send(orders);
     });
+
+
+  export const deleteOrder = expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      const deleteOrder = await order.remove();
+      res.send({ message: 'Order Deleted', order: deleteOrder });
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+
+  export const orderDeliver =  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+
+      const updatedOrder = await order.save();
+      res.send({ message: 'Order Delivered', order: updatedOrder });
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })

@@ -4,6 +4,7 @@ import ProductRouter from "./router/productRouter.js";
 import userRouter from "./router/userRouter.js";
 import dotenv from 'dotenv';
 import orderRouter from "./router/orderRouter.js";
+import path from 'path';
 
 
 dotenv.config()
@@ -29,6 +30,13 @@ app.get('/api/config/paypal', (req, res) => {
 app.use((err, req, res, next) => {
     res.status(500).send({message: err.message})
 })
+
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use(express.static(path.join(__dirname, '/client/build')));
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
+);
 
 const port = process.env.PORT || 5000;
 
